@@ -12,7 +12,7 @@ client.on('messageCreate', message => {
     if (message.author.bot) return;
 
     const content = message.content.trim();
-    const allowedChannelId = "1370774836359467119"; // ここのIDを変更する、もしくはこの行を削除&下の行も一部削除(全チャンネルで有効化)
+    const allowedChannelId = "1370774836359467119";
     if (content.endsWith("い") && message.channel.id === allowedChannelId) {
         message.channel.send("んぽ");
     }
