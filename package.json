@@ -3,5 +3,8 @@
   "version": "0.1.0",
   "description": "「い」で終わるメッセージを送信すると「んぽ」と返すだけのbotです。",
   "main": "index.js",
-  "author": "alllllllllly"
+  "author": "alllllllllly",
+  "scripts": {
+    "start": "node index.js"
+  }
 }
