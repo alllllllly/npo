@@ -18,4 +18,4 @@ client.on('messageCreate', message => {
         message.channel.send("んぽ");
     }
 });
-client.login('DISCORD_TOKEN');
+client.login(process.env.DISCORD_TOKEN);
