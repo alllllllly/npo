@@ -66,6 +66,7 @@ async function loadProblemList() {
         client.problemList = Object.entries(data).map(([key, value]) => {
             const parts = key.split("_");
             if (parts.length !== 2) return null;
+            if (parts[0]== "ahc") return null;
             const [contest, problem] = parts;
             let diff = value.difficulty;
             diff = Math.round(diff >= 400 ? diff : 400 / Math.exp(1.0 - diff / 400));
