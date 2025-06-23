@@ -48,11 +48,11 @@ module.exports = {
             const rating = await fetchUserRating(username);
             const problem = pickRandomProblem(problemList, rating);
             if (!problem) {
-                await interaction.followUp(`レート近辺(${rating}±${RATING_MARGIN})の問題が見つかりませんでした。\n<@alllllllllly_> にキレてください。`);
+                await interaction.followUp(`${username}さん(rating:${rating})におすすめの問題が見つかりませんでした。\n<@alllllllllly_> にキレてください。`);
                 return;
             }
             const link = `https://atcoder.jp/contests/${problem[0]}/tasks/${problem[1]}`;
-            await interaction.followUp(`${username}(rating:${rating})さんにおすすめの問題を選びました！ \n頑張ってください！ \n問題: <${link}>（推定difficluty:${problem[2]})`);
+            await interaction.followUp(`${username}さん(rating:${rating})におすすめの問題を選びました！ \n頑張ってください！ \n問題: <${link}>（推定difficluty:${problem[2]})`);
         } catch (err) {
             console.error(err);
             if (err.message === 'No history data') {
