@@ -6,7 +6,7 @@ const RATING_MARGIN = 100;
 async function fetchUserRating(username) {
     const url = `https://atcoder.jp/users/${username}/history/json`;
     const res = await fetch(url);
-    if (!res.ok) throw new Error(`Failed to fetch user history: ${res.status}`);
+    if (!res.ok) throw new Error(`ユーザーの記録の取得に失敗しました。: ${res.status}`);
     const data = await res.json();
     if (!Array.isArray(data) || data.length === 0) throw new Error('No history data');
     const lastEntry = data[data.length - 1];
@@ -28,7 +28,7 @@ function pickRandomProblem(problemList, rating) {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('problem')
-        .setDescription('あなたのrating値から適正の問題をランダムに提示します。')
+        .setDescription('あなたのrating値からおすすめの問題を選びます！')
         .addStringOption(option =>
             option.setName('username')
                 .setDescription('あなたののAtCoderユーザー名')
@@ -44,7 +44,7 @@ module.exports = {
 
         await interaction.deferReply();
         try {
-            await interaction.followUp(`@${username} のレーティングを取得中...`);
+            await interaction.followUp(`${username}さんのレーティングを取得中...`);
             const rating = await fetchUserRating(username);
             const problem = pickRandomProblem(problemList, rating);
             if (!problem) {
@@ -52,11 +52,11 @@ module.exports = {
                 return;
             }
             const link = `https://atcoder.jp/contests/${problem[0]}/tasks/${problem[1]}`;
-            await interaction.followUp(`推薦問題: <${link}>（推定難易度 ${problem[2]}）`);
+            await interaction.followUp(`${username}(rating:${rating})さんにおすすめの問題を選びました！ \n頑張ってください！ \n問題: <${link}>（推定difficluty:${problem[2]})`);
         } catch (err) {
             console.error(err);
             if (err.message === 'No history data') {
-                await interaction.followUp('AtCoderアカウントに記録がありません。\nユーザー名の打ち間違いをご確認ください。');
+                await interaction.followUp('入力されたAtCoderアカウントに記録がありません。\nユーザー名の打ち間違いをご確認ください。');
             } else {
                 await interaction.followUp(`エラー発生… ${err.message} \n<@alllllllllly_> の対応をお待ち下さい。`);
             }
