@@ -82,7 +82,7 @@ client.on('messageCreate', message => {
     const allowedChannelIds = ["1370774836359467119"];
     if (allowedChannelIds.includes(message.channel.id)) {
         if (content.endsWith("い")) {
-            message.channel.send("んぽ");
+            message.channel.send("んぽ！");
         }
     }
 });
