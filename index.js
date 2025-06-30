@@ -63,7 +63,7 @@ async function loadProblemList() {
         client.problemList = Object.entries(data).map(([key, value]) => {
             const parts = key.split("_");
             if (parts.length !== 2) return null;
-            if (parts[0]== "ahc") return null;
+            if (parts[0].startsWith("ahc")) return null;
             const [contest, problem] = parts;
             let diff = value.difficulty;
             diff = Math.round(diff >= 400 ? diff : 400 / Math.exp(1.0 - diff / 400));
@@ -82,7 +82,10 @@ client.on('messageCreate', message => {
     const allowedChannelIds = ["1370774836359467119"];
     if (allowedChannelIds.includes(message.channel.id)) {
         if (content.endsWith("い")) {
-            message.channel.send("んぽ");
+            message.channel.send("んぽ！");
+        }
+        else if (content.startsWith("fuck")) {
+            message.channel.send("f*ck!!!");
         }
     }
 });
