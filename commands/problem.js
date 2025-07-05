@@ -4,27 +4,27 @@ const RATING_LOWER_MARGIN = 100;
 const RATING_HIGHER_MARGIN = 200;
 const lately = 15;
 
-// fetchUserRating: AtCoderの最新レート取得
 async function fetchUserRating(username) {
     const url = `https://atcoder.jp/users/${username}/history/json`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`ユーザーの記録の取得に失敗しました。: ${res.status}`);
     const data = await res.json();
-    if (!Array.isArray(data) || data.length === 0) throw new Error('No history data');
+    const checked_data = data.filter(data => data.IsRated === true);
+    if (!Array.isArray(checked_data) || checked_data.length === 0) throw new Error('No Rated History Data');
     let lately_Perf=0;
-    if (data.length < lately) {
-        for (let i=0; i<data.length; i++) {
-            lately_Perf+=data[i].Performance;
+    if (checked_data.length < lately) {
+        for (let i=0; i<checked_data.length; i++) {
+            lately_Perf+=checked_data[i].Performance;
         }
-        lately_Perf/=data.length;
+        lately_Perf/=checked_data.length;
     }
     else {
-        for (let i=data.length-lately; i<data.length; i++) {
-            lately_Perf+=data[i].Performance;
+        for (let i=checked_data.length-lately; i<checked_data.length; i++) {
+            lately_Perf+=checked_data[i].Performance;
         }
         lately_Perf/=lately;
     }
-    return lately_Perf;
+    return Math.round(lately_Perf);
 }
 
 // pickRandomProblem: レート近辺の問題を1問選ぶ
@@ -69,8 +69,8 @@ module.exports = {
             await interaction.followUp(`${username}さん(直近平均パフォーマンス:${lately_Perf})におすすめの問題を選びました！ \n頑張ってください！ \n問題: <${link}>（推定difficluty:${problem[2]})`);
         } catch (err) {
             console.error(err);
-            if (err.message === 'No history data') {
-                await interaction.followUp('入力されたAtCoderアカウントに記録がありません。\nユーザー名の打ち間違いをご確認ください。');
+            if (err.message === 'No Rated History Data') {
+                await interaction.followUp(`${username}さんにRatedな参加記録がありません。\nユーザー名の打ち間違いをご確認ください。`);
             } else {
                 await interaction.followUp(`エラー発生… ${err.message} \n<@alllllllllly_> の対応をお待ち下さい。`);
             }
