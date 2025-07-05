@@ -84,8 +84,14 @@ client.on('messageCreate', message => {
         if (content.endsWith("い")) {
             message.channel.send("んぽ！");
         }
-        else if (content.startsWith("fuck")) {
-            message.channel.send("f*ck!!!");
+        else if (content.indexOf("f")!=-1||content.indexOf("F")!=-1) {
+          if (content.indexOf("u")!=-1||content.indexOf("U")!=-1) {
+            if (content.indexOf("c")!=-1||content.indexOf("C")!=-1) {
+              if (content.indexOf("k")!=-1||content.indexOf("K")!=-1) {
+                message.channel.reply("f**k!!!");
+              }
+            }
+          }
         }
     }
 });
