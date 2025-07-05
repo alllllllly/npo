@@ -28,9 +28,9 @@ async function fetchUserRating(username) {
 }
 
 // pickRandomProblem: レート近辺の問題を1問選ぶ
-function pickRandomProblem(problemList, rating) {
-    const low = rating - RATING_LOWER_MARGIN;
-    const high = rating + RATING_HIGHER_MARGIN;
+function pickRandomProblem(problemList, lately_Perf) {
+    const low = lately_Perf - RATING_LOWER_MARGIN;
+    const high = lately_Perf + RATING_HIGHER_MARGIN;
     const candidates = problemList.filter(
         p => p[2] >= low && p[2] <= high
     );
@@ -58,15 +58,15 @@ module.exports = {
 
         await interaction.deferReply();
         try {
-            await interaction.followUp(`${username}さんの直近パフォーマンスを取得中...`);
+            await interaction.followUp(`${username}さんの直近平均パフォーマンスを取得中...`);
             const lately_Perf = await fetchUserRating(username);
-            const problem = pickRandomProblem(problemList, rating);
+            const problem = pickRandomProblem(problemList, lately_Perf);
             if (!problem) {
-                await interaction.followUp(`${username}さん(直近パフォーマンス:${lately_Perf})におすすめの問題が見つかりませんでした。\n<@alllllllllly_> にキレてください。`);
+                await interaction.followUp(`${username}さん(直近平均パフォーマンス:${lately_Perf})におすすめの問題が見つかりませんでした。\n<@alllllllllly_> にキレてください。`);
                 return;
             }
             const link = `https://atcoder.jp/contests/${problem[0]}/tasks/${problem[1]}`;
-            await interaction.followUp(`${username}さん(直近パフォーマンス:${lately_Perf})におすすめの問題を選びました！ \n頑張ってください！ \n問題: <${link}>（推定difficluty:${problem[2]})`);
+            await interaction.followUp(`${username}さん(直近平均パフォーマンス:${lately_Perf})におすすめの問題を選びました！ \n頑張ってください！ \n問題: <${link}>（推定difficluty:${problem[2]})`);
         } catch (err) {
             console.error(err);
             if (err.message === 'No history data') {
