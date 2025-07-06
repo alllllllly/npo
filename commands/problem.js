@@ -1,10 +1,10 @@
 const { SlashCommandBuilder } = require('discord.js');
 
-const RATING_LOWER_MARGIN = 100;
-const RATING_HIGHER_MARGIN = 200;
+const LOWER_MARGIN = 100;
+const HIGHER_MARGIN = 200;
 const lately = 15;
 
-async function fetchUserRating(username) {
+async function fetchUserPerf(username) {
     const url = `https://atcoder.jp/users/${username}/history/json`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`ユーザーの記録の取得に失敗しました。: ${res.status}`);
@@ -27,10 +27,9 @@ async function fetchUserRating(username) {
     return Math.round(lately_Perf);
 }
 
-// pickRandomProblem: レート近辺の問題を1問選ぶ
 function pickRandomProblem(problemList, lately_Perf) {
-    const low = lately_Perf - RATING_LOWER_MARGIN;
-    const high = lately_Perf + RATING_HIGHER_MARGIN;
+    const low = lately_Perf - LOWER_MARGIN;
+    const high = lately_Perf + HIGHER_MARGIN;
     const candidates = problemList.filter(
         p => p[2] >= low && p[2] <= high
     );
@@ -38,6 +37,8 @@ function pickRandomProblem(problemList, lately_Perf) {
     const choice = candidates[Math.floor(Math.random() * candidates.length)];
     return choice;
 }
+
+/*-------------------------------------------------------------------------------------------------------------------------*/
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -59,7 +60,7 @@ module.exports = {
         await interaction.deferReply();
         try {
             await interaction.followUp(`${username}さんの直近平均パフォーマンスを取得中...`);
-            const lately_Perf = await fetchUserRating(username);
+            const lately_Perf = await fetchUserPerf(username);
             const problem = pickRandomProblem(problemList, lately_Perf);
             if (!problem) {
                 await interaction.followUp(`${username}さん(直近平均パフォーマンス:${lately_Perf})におすすめの問題が見つかりませんでした。\n<@alllllllllly_> にキレてください。`);

@@ -85,10 +85,10 @@ client.on('messageCreate', message => {
             message.channel.send("んぽ！");
         }
         else if (content.endsWith("は")) {
-          message.channel.send("っくしょん！");
+            message.channel.send("っくしょん！");
         }
         else if (content.endsWith("ハ")) {
-          Message.channel.send("ックション！");
+            message.channel.send("ックション！");
         }
     }
 });
