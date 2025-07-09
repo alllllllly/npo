@@ -86,9 +86,17 @@ client.on('messageCreate', message => {
         }
         else if (content.endsWith("は")) {
             message.channel.send("っくしょん！");
+            const user = client.users.cache.get('1314573718990749807');
+            if (Math.random()<0.3) {
+                user.send("はっくしょん！");
+            }
         }
         else if (content.endsWith("ハ")) {
             message.channel.send("ックション！");
+            const user = client.users.cache.get('1314573718990749807');
+            if (Math.random()<0.3) {
+                user.send("ハックション！");
+            }
         }
     }
 });
