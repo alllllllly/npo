@@ -29,7 +29,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
       Routes.applicationGuildCommands('1377513527623024750', '1314530064796225536'),
       { body: commands },
     );
-    console.log('スラッシュコマンドを登録しました');
+    console.log('スラッシュコマンドを登録しました。');
   } catch (error) {
     console.error(error);
   }
@@ -49,7 +49,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.once('ready', () => {
-    console.log(`ログインしました: ${client.user.tag}`);
+    console.log(`${client.user.tag}としてログインしました。`);
 });
 
 const PROBLEM_LIST_URL = 'https://kenkoooo.com/atcoder/resources/problem-models.json';
@@ -63,15 +63,22 @@ async function loadProblemList() {
         client.problemList = Object.entries(data).map(([key, value]) => {
             const parts = key.split("_");
             if (parts.length !== 2) return null;
-            if (parts[0]!="abc"||parts[0]!="arc"||parts[0]!="agc") return null;
-            const [contest, problem] = parts;
-            let diff = value.difficulty;
-            diff = Math.round(diff >= 400 ? diff : 400 / Math.exp(1.0 - diff / 400));
-            return [contest, `${contest}_${problem}`, diff];
+            if (parts[0].startsWith("abc")||parts[0].startsWith("arc")||parts[0].startsWith("agc")) {
+                const [contest, problem] = parts;
+                let diff = value.difficulty;
+                diff = Math.round(diff >= 400 ? diff : 400 / Math.exp(1.0 - diff / 400));
+                return [contest, `${contest}_${problem}`, diff];
+            }
+            else return null;
         }).filter(Boolean);
-        console.log(`Loaded ${client.problemList.length} problems.`);
+        if (client.problemList.length>0) {
+            console.log(`${client.problemList.length}問の問題を読み込みました。`);
+        }
+        else {
+            console.log(`問題を読み込めませんでした。`);
+        }
     } catch (err) {
-        console.error('Failed to load problem list:', err);
+        console.error('問題の読み込みに失敗しました。:', err);
     }
 }
 
@@ -87,14 +94,14 @@ client.on('messageCreate', message => {
         else if (content.endsWith("は")) {
             message.channel.send("っくしょん！");
             const user = client.users.cache.get('1314573718990749807');
-            if (Math.random()<0.3) {
+            if (Math.random()<0.1) {
                 user.send("はっくしょん！");
             }
         }
         else if (content.endsWith("ハ")) {
             message.channel.send("ックション！");
             const user = client.users.cache.get('1314573718990749807');
-            if (Math.random()<0.3) {
+            if (Math.random()<0.1) {
                 user.send("ハックション！");
             }
         }
