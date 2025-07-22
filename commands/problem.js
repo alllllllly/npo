@@ -1,8 +1,26 @@
 const { SlashCommandBuilder } = require('discord.js');
+const fs = require('fs');
+const path = require('path');
 
-const LOWER_MARGIN = 100;
+const DATA_FILE = path.join(__dirname, '..', 'user_data.json');
+
+const LOWER_MARGIN = 50;
 const HIGHER_MARGIN = 200;
 const lately = 15;
+
+function loadUserData() {
+    try {
+        if (fs.existsSync(DATA_FILE)) {
+            const data = fs.readFileSync(DATA_FILE, 'utf8');
+            return JSON.parse(data);
+        } else {
+            return {};
+        }
+    } catch (err) {
+        console.error('ユーザーデータの読込エラー:', err);
+        return {};
+    }
+}
 
 async function fetchUserPerf(username) {
     const url = `https://atcoder.jp/users/${username}/history/json`;
@@ -47,10 +65,27 @@ module.exports = {
         .addStringOption(option =>
             option.setName('username')
                 .setDescription('あなたののAtCoderユーザー名')
-                .setRequired(true)
+                .setRequired(false)
         ),
     async execute(interaction) {
-        const username = interaction.options.getString('username');
+        let username = interaction.options.getString('username');
+        if (username === null) {
+            const userdata = loadUserData();
+            const userId = interaction.user.id;
+            
+            const entry = Object.entries(userdata).find(([discordId, atcoderId]) => {
+                const cleanId = discordId.replace(/[<@!>]/g, '');
+                return userId === cleanId;
+            });
+            
+            if (entry) {
+                username = entry[1];
+            } else {
+                await interaction.reply(`<@${userId}>さんにAtCoderアカウントが結びつけられていません。\nAtCoderIDをオプションで入力してコマンドを実行してください。`);
+                return;
+            }
+        }
+        
         const problemList = interaction.client.problemList;
         if (!problemList || problemList.length === 0) {
             await interaction.reply('問題リストが読み込まれていません。 \n<@alllllllllly_>に文句を言ってください。');
@@ -68,7 +103,7 @@ module.exports = {
             }
             const link = `https://atcoder.jp/contests/${problem[0]}/tasks/${problem[1]}`;
             await interaction.followUp(`${username}さん(直近平均パフォーマンス:${lately_Perf})におすすめの問題を選びました！ \n頑張ってください！ \n問題: <${link}>（推定difficluty:${problem[2]})`);
-        } catch (err) {
+         } catch (err) {
             console.error(err);
             if (err.message === 'No Rated History Data') {
                 await interaction.followUp(`${username}さんにRatedな参加記録がありません。\nユーザー名の打ち間違いをご確認ください。`);
