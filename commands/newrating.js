@@ -21,7 +21,6 @@ function loadUserData() {
 async function algoChange(history, guild) {
     const userdata = loadUserData();
     const grey = '1317488819355783218';
-    const charcoal ='1397014784062259351';
     const brown = '1317489475625943083';
     const green = '1317489644149145650';
     const lightblue = '1317489792165871748';
@@ -41,8 +40,7 @@ async function algoChange(history, guild) {
             const newRate = user[user.length - 1].NewRating;
 
             const oldColorRoleId =
-                oldRate < 300 ? grey :
-                oldRate < 500 ? charcoal :
+                oldRate < 400 ? grey :
                 oldRate < 800 ? brown :
                 oldRate < 1200 ? green :
                 oldRate < 1600 ? lightblue :
@@ -51,8 +49,7 @@ async function algoChange(history, guild) {
                 oldRate < 2800 ? orange : red;
 
             const newColorRoleId =
-                newRate < 300 ? grey :
-                newRate < 500 ? charcoal :
+                newRate < 400 ? grey :
                 newRate < 800 ? brown :
                 newRate < 1200 ? green :
                 newRate < 1600 ? lightblue :
@@ -63,7 +60,14 @@ async function algoChange(history, guild) {
             if (oldColorRoleId !== newColorRoleId) {
                 try {
                     const member = await guild.members.fetch(discordId.replace(/[<@!>]/g, ''));
-                    await member.roles.remove(oldColorRoleId);
+                    await member.roles.remove(grey);
+                    await member.roles.remove(brown);
+                    await member.roles.remove(green);
+                    await member.roles.remove(lightblue);
+                    await member.roles.remove(blue);
+                    await member.roles.remove(yellow);
+                    await member.roles.remove(orange);
+                    await member.roles.remove(red);
                     await member.roles.add(newColorRoleId);
                 } catch (err) {
                     console.error(`ロール更新失敗: ${discordId} (${atcoderId})`, err);

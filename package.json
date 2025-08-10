@@ -1,6 +1,6 @@
 {
   "name": "npo-bot",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "「い」で終わるメッセージを送信すると「んぽ」と返すだけのbotです。",
   "main": "index.js",
   "author": "alllllllllly",
