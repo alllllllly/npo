@@ -6,7 +6,7 @@ const DATA_FILE = path.join(__dirname, '..', 'user_data.json');
 
 const LOWER_MARGIN = 50;
 const HIGHER_MARGIN = 150;
-const lately = 15;
+let lately;
 
 function loadUserData() {
     try {
@@ -34,6 +34,7 @@ async function fetchUserPerf(username) {
         for (let i=0; i<checked_data.length; i++) {
             lately_Perf+=checked_data[i].Performance;
         }
+        lately = checked_data.length;
         lately_Perf/=checked_data.length;
     }
     else {
@@ -66,9 +67,15 @@ module.exports = {
             option.setName('username')
                 .setDescription('あなたののAtCoderユーザー名')
                 .setRequired(false)
+        )
+        .addIntegerOption(option =>
+            option.setName('contests')
+                .setDescription('収集する直近コンテストの数')
+                .setRequired(false)
         ),
     async execute(interaction) {
         let username = interaction.options.getString('username');
+        lately = interaction.options.getInteger('contests');
         if (username === null) {
             const userdata = loadUserData();
             const userId = interaction.user.id;
@@ -98,11 +105,11 @@ module.exports = {
             const lately_Perf = await fetchUserPerf(username);
             const problem = pickRandomProblem(problemList, lately_Perf);
             if (!problem) {
-                await interaction.followUp(`${username}さん(直近平均パフォーマンス:${lately_Perf})におすすめの問題が見つかりませんでした。\n<@alllllllllly_> にキレてください。`);
+                await interaction.followUp(`${username}さん(直近${lately}回の平均パフォーマンス:${lately_Perf})におすすめの問題が見つかりませんでした。\n<@alllllllllly_> にキレてください。`);
                 return;
             }
             const link = `https://atcoder.jp/contests/${problem[0]}/tasks/${problem[1]}`;
-            await interaction.followUp(`${username}さん(直近平均パフォーマンス:${lately_Perf})におすすめの問題を選びました！ \n頑張ってください！ \n問題: <${link}>（推定difficluty:${problem[2]})`);
+            await interaction.followUp(`${username}さん(直近${lately}回の平均パフォーマンス:${lately_Perf})におすすめの問題を選びました！ \n頑張ってください！ \n問題: <${link}>（推定difficluty:${problem[2]})`);
          } catch (err) {
             console.error(err);
             if (err.message === 'No Rated History Data') {
