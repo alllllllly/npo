@@ -92,6 +92,9 @@ module.exports = {
                 return;
             }
         }
+        if (lately === null) {
+            lately = 5;
+        }
         
         const problemList = interaction.client.problemList;
         if (!problemList || problemList.length === 0) {
