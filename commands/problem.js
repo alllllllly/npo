@@ -92,8 +92,10 @@ module.exports = {
                 return;
             }
         }
-        if (lately === null) {
-            lately = 5;
+        if (lately === null) lately = 5;
+        else if (lately < 1) {
+            await interaction.reply(`引数contestsが不正です。正整数の値で入力してください。`);
+            return;
         }
         
         const problemList = interaction.client.problemList;
