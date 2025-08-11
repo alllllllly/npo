@@ -5,7 +5,7 @@ const path = require('path');
 const DATA_FILE = path.join(__dirname, '..', 'user_data.json');
 
 const LOWER_MARGIN = 50;
-const HIGHER_MARGIN = 200;
+const HIGHER_MARGIN = 150;
 const lately = 15;
 
 function loadUserData() {
