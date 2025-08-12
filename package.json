@@ -1,11 +1,11 @@
 {
   "name": "npo-bot",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "description": "「い」で終わるメッセージを送信すると「んぽ」と返すだけのbotです。",
-  "main": "index.js",
+  "main": "npo.js",
   "author": "alllllllllly",
   "scripts": {
-    "start": "node index.js"
+    "start": "node npo.js"
   },
   "dependencies": {
     "discord.js": "^14.0.0",

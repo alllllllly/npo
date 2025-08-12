@@ -86,21 +86,21 @@ client.on('messageCreate', message => {
     if (message.author.bot) return;
 
     const content = message.content.trim();
-    const allowedChannelIds = ["1370774836359467119"];
-    if (allowedChannelIds.includes(message.channel.id)) {
+    const ChannelIds = JSON.parse(process.env.CHANNEL_IDS);
+    if (ChannelIds.includes(message.channel.id)) {
         if (content.endsWith("い")) {
             message.channel.send("んぽ！");
         }
         else if (content.endsWith("は")) {
             message.channel.send("っくしょん！");
-            const user = client.users.cache.get('1314573718990749807');
+            const user = client.users.cache.get(process.env.MENTION_USER);
             if (Math.random()<0.1) {
                 user.send("はっくしょん！");
             }
         }
         else if (content.endsWith("ハ")) {
             message.channel.send("ックション！");
-            const user = client.users.cache.get('1314573718990749807');
+            const user = client.users.cache.get(process.env.MENTION_USER);
             if (Math.random()<0.1) {
                 user.send("ハックション！");
             }
