@@ -92,6 +92,10 @@ module.exports = {
                 return;
             }
         }
+        else if (username.includes('/')) {
+            await interaction.reply(`入力されたユーザー名が不正です。ユーザー名は正しく入力してください。`);
+            return;
+        }
         if (lately === null) lately = 5;
         else if (lately < 1) {
             await interaction.reply(`引数contestsが不正です。正整数の値で入力してください。`);

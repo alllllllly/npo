@@ -51,6 +51,10 @@ module.exports = {
     async execute(interaction) {
         const discordId = interaction.options.getUser('discord_id');
         const atcoderId = interaction.options.getString('atcoder_id');
+        if (lately.includes('/')) {
+            await interaction.reply(`入力されたユーザー名が不正です。ユーザー名は正しく入力してください。`);
+            return;
+        }
         if (await checkUserData(atcoderId)) {
             const userData = loadUserData();
             userData[discordId] = atcoderId;
