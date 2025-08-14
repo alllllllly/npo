@@ -87,7 +87,7 @@ module.exports = {
         .setName('newrating')
         .setDescription('ratingの値に応じた色ロールを更新します。'),
     async execute(interaction) {
-        await interaction.deferReply(); //応答猶予
+        await interaction.deferReply();
         let algoHistory = [];
         const guild = interaction.guild;
         await algoChange(algoHistory, guild);

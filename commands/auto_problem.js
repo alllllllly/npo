@@ -61,7 +61,7 @@ function pickRandomProblem(problemList, lately_Perf) {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('problem')
+        .setName('auto problem')
         .setDescription('あなたの最近のパフォーマンスからおすすめの問題を選びます！')
         .addStringOption(option =>
             option.setName('username')
@@ -93,7 +93,7 @@ module.exports = {
             }
         }
         else if (username.includes('/')) {
-            await interaction.reply(`入力されたユーザー名が不正です。ユーザー名は正しく入力してください。`);
+            await interaction.reply(`入力されたユーザー名が不正です。ユーザー名を正しく入力してください。`);
             return;
         }
         if (lately === null) lately = 5;
@@ -104,7 +104,7 @@ module.exports = {
         
         const problemList = interaction.client.problemList;
         if (!problemList || problemList.length === 0) {
-            await interaction.reply('問題リストが読み込まれていません。 \n<@alllllllllly_>に文句を言ってください。');
+            await interaction.reply('問題リストが読み込まれていません。 \nallllllllllyに文句を言ってください。');
             return;
         }
 
@@ -114,7 +114,7 @@ module.exports = {
             const lately_Perf = await fetchUserPerf(username);
             const problem = pickRandomProblem(problemList, lately_Perf);
             if (!problem) {
-                await interaction.followUp(`${username}さん(直近${lately}回の平均パフォーマンス:${lately_Perf})におすすめの問題が見つかりませんでした。\n<@alllllllllly_> にキレてください。`);
+                await interaction.followUp(`${username}さん(直近${lately}回の平均パフォーマンス:${lately_Perf})におすすめの問題が見つかりませんでした。`);
                 return;
             }
             const link = `https://atcoder.jp/contests/${problem[0]}/tasks/${problem[1]}`;
@@ -124,7 +124,7 @@ module.exports = {
             if (err.message === 'No Rated History Data') {
                 await interaction.followUp(`${username}さんにRatedな参加記録がありません。\nユーザー名の打ち間違いをご確認ください。`);
             } else {
-                await interaction.followUp(`エラー発生… ${err.message} \n<@alllllllllly_> の対応をお待ち下さい。`);
+                await interaction.followUp(`エラー発生… ${err.message} \nallllllllllyの対応をお待ち下さい。`);
             }
         }
     }
