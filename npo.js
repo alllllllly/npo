@@ -53,7 +53,6 @@ client.once('ready', () => {
 });
 
 const PROBLEM_LIST_URL = 'https://kenkoooo.com/atcoder/resources/problem-models.json';
-
 client.problemList=[];
 
 async function loadProblemList() {

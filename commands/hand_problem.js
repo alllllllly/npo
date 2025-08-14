@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
-function pickRandomProblem(low, high) {
+function pickRandomProblem(problemList, low, high) {
     const candidates = problemList.filter(
         p => p[2] >= low && p[2] <= high
     );
@@ -15,8 +15,8 @@ function pickRandomProblem(low, high) {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('auto problem')
-        .setDescription('あなたの最近のパフォーマンスからおすすめの問題を選びます！')
+        .setName('hand_problem')
+        .setDescription('指定されたdiffcultyの中から問題を選びます！')
         .addIntegerOption(option =>
             option.setName('low')
                 .setDescription('選ばれる問題のdiff下限値')
@@ -24,12 +24,13 @@ module.exports = {
         )
         .addIntegerOption(option =>
             option.setName('high')
-                .setDescription('選ばれる問題のdiff下限値')
+                .setDescription('選ばれる問題のdiff上限値')
                 .setRequired(true)
         ),
     async execute(interaction) {
-        const low = interaction.option.getInteger('low');
-        const high = interaction.option.getInteger('high');
+        const low = interaction.options.getInteger('low');
+        const high = interaction.options.getInteger('high');
+        if (low < 1 || high < 1) await interaction.reply('制限の値が不正です。正整数で指定してください。');
         
         const problemList = interaction.client.problemList;
         if (!problemList || problemList.length === 0) {
@@ -40,7 +41,7 @@ module.exports = {
         await interaction.deferReply();
         try {
             await interaction.followUp(`推定difficulty:${low}~${high}の問題を検索中...`);
-            const problem = pickRandomProblem(low, high);
+            const problem = pickRandomProblem(problemList, low, high);
             if (!problem) {
                 await interaction.followUp(`推定difficulty:${low}~${high}の問題は見つかりませんでした。`);
                 return;

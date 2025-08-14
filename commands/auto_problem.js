@@ -61,7 +61,7 @@ function pickRandomProblem(problemList, lately_Perf) {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('auto problem')
+        .setName('auto_problem')
         .setDescription('あなたの最近のパフォーマンスからおすすめの問題を選びます！')
         .addStringOption(option =>
             option.setName('username')
