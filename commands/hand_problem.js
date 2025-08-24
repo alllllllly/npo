@@ -30,7 +30,8 @@ module.exports = {
     async execute(interaction) {
         const low = interaction.options.getInteger('low');
         const high = interaction.options.getInteger('high');
-        if (low < 1 || high < 1) await interaction.reply('制限の値が不正です。正整数で指定してください。');
+        if (low < 1 || high < 1 ) await interaction.reply('制限の値が不正です。正整数で指定してください。');
+        else if (low > high) await interaction.reply('制限の値が不正です。上限値は下限値より高く設定してください。')
         
         const problemList = interaction.client.problemList;
         if (!problemList || problemList.length === 0) {
