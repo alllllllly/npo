@@ -4,7 +4,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 client.commands = new Collection();
 
@@ -29,7 +29,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
       Routes.applicationGuildCommands('1377513527623024750', '1314530064796225536'),
       { body: commands },
     );
-    console.log('スラッシュコマンドを登録しました。');
+    console.log('スラッシュコマンド登録完了');
   } catch (error) {
     console.error(error);
   }
@@ -49,62 +49,69 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.once('ready', () => {
-    console.log(`${client.user.tag}としてログインしました。`);
+  console.log(`${client.user.tag}としてログインしました。`);
 });
 
 const PROBLEM_LIST_URL = 'https://kenkoooo.com/atcoder/resources/problem-models.json';
 client.problemList=[];
 
 async function loadProblemList() {
-    try {
-        const res = await fetch(PROBLEM_LIST_URL);
-        const data = await res.json();
-        client.problemList = Object.entries(data).map(([key, value]) => {
-            const parts = key.split("_");
-            if (parts.length !== 2) return null;
-            if (parts[0].startsWith("abc")||parts[0].startsWith("arc")||parts[0].startsWith("agc")) {
-                const [contest, problem] = parts;
-                let diff = value.difficulty;
-                diff = Math.round(diff >= 400 ? diff : 400 / Math.exp(1.0 - diff / 400));
-                return [contest, `${contest}_${problem}`, diff];
-            }
-            else return null;
-        }).filter(Boolean);
-        if (client.problemList.length>0) {
-            console.log(`${client.problemList.length}問の問題を読み込みました。`);
-        }
-        else {
-            console.log(`問題を読み込めませんでした。`);
-        }
-    } catch (err) {
-        console.error('問題の読み込みに失敗しました。:', err);
+  try {
+    const res = await fetch(PROBLEM_LIST_URL);
+    const data = await res.json();
+    client.problemList = Object.entries(data).map(([key, value]) => {
+      const parts = key.split("_");
+      if (parts.length !== 2) return null;
+      if (parts[0].startsWith("abc")||parts[0].startsWith("arc")||parts[0].startsWith("agc")) {
+        const [contest, problem] = parts;
+        let diff = value.difficulty;
+        diff = Math.round(diff >= 400 ? diff : 400 / Math.exp(1.0 - diff / 400));
+        return [contest, `${contest}_${problem}`, diff];
+      }
+      else return null;
+    }).filter(Boolean);
+    if (client.problemList.length>0) {
+      console.log(`読込問題数:${client.problemList.length}問`);
     }
+    else {
+      console.log(`問題読込失敗`);
+    }
+  } catch (err) {
+    console.error('問題読込失敗:', err);
+  }
+}
+
+function deleteEx(content) {
+  // 一度にすべての末尾記号を削除（無限ループを防ぐ）
+  return content.replace(/[！？!?、。.]+$/, "");
 }
 
 client.on('messageCreate', message => {
-    if (message.author.bot) return;
+  if (message.author.bot) return;
 
-    const content = message.content.trim();
-    const ChannelIds = JSON.parse(process.env.CHANNEL_IDS);
-    if (ChannelIds.includes(message.channel.id)) {
-        if (content.endsWith("い")) {
-            message.channel.send("んぽ！");
-        }
-        else if (content.endsWith("は")) {
-            message.channel.send("っくしょん！");
-            const user = client.users.cache.get(process.env.MENTION_USER);
-            if (Math.random()<0.1) {
-                user.send("はっくしょん！");
-            }
-        }
-        else if (content.endsWith("ハ")) {
-            message.channel.send("ックション！");
-            const user = client.users.cache.get(process.env.MENTION_USER);
-            if (Math.random()<0.1) {
-                user.send("ハックション！");
-            }
-        }
+  const content = message.content.trim();
+  const ChannelIds = JSON.parse(process.env.CHANNEL_IDS);
+  if (ChannelIds.includes(message.channel.id)) {
+    const proContent = deleteEx(content);
+
+    if (proContent.endsWith("い")) {
+      message.channel.send("んぽ！");
     }
+    else if (proContent.endsWith("は")) {
+      message.channel.send("っくしょん！");
+      const user = client.users.cache.get(process.env.MENTION_USER);
+      if (Math.random() < 0.1) {
+        user.send("はっくしょん！");
+      }
+    }
+    else if (proContent.endsWith("ハ")) {
+      message.channel.send("ックション！");
+      const user = client.users.cache.get(process.env.MENTION_USER);
+      if (Math.random() < 0.1) {
+        user.send("ハックション！");
+      }
+    }
+  }
 });
 
 loadProblemList();
